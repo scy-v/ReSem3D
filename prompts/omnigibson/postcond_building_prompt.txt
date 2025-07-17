@@ -1,0 +1,56 @@
+from env_utils import get_ee_pos, get_ee_quat, get_ee_axis_vector, compute_pos_diff, compute_vector_diff, compute_orientation_diff
+from perception_utils import parse_object_state, transform_orientation
+
+#Query: Check if the end effector reaches the tissue.
+ee_pos = get_ee_pos()
+ee_quat = get_ee_quat()
+tissue_state = parse_object_state("tissue")
+tissue_pose = tissue_state.get("refined", tissue_state["extracted"])["move"][0]()[:] # "move" needs callback() 
+tissue_orientation = transform_orientation(name="tissue", xyzw=tissue_pose[3:], convention='xyz', angle=None, type="world")
+pos_diff = compute_pos_diff(ee_pos, tissue_pose[:3], threshold=0.006)
+ori_diff = compute_orientation_diff(ee_quat, tissue_orientation, threshold=0.08)
+ret_val = pos_diff and ori_diff
+
+#Query: Check if the test tube has reached a height of 10 cm.
+ee_pos = get_ee_pos()
+t_tube_state = parse_object_state("test_tube")
+t_tube_pose = t_tube_state.get("refined", t_tube_state["extracted"])["init"][0][:]
+t_tube_pose[2] += 0.1
+ret_val = compute_pos_diff(ee_pos[2], t_tube_pose[2], threshold=0.008)
+
+#Query: Check if the fork is 20cm above the plate.
+ee_pos = get_ee_pos()
+ee_quat = get_ee_quat()
+fork_state = parse_object_state("fork")
+plate_state = parse_object_state("plate")
+fork_pose = fork_state.get("refined", fork_state["extracted"])["move"][0]()[:]
+plate_pose = plate_state.get("refined", plate_state["extracted"])["move"][0]()[:] # "move" needs callback ()
+fork_orientation = transform_orientation(name="fork", xyzw=fork_pose[3:], convention='xyz', angle=None, type="world")
+plate_pose[2] += 0.2
+pos_diff = compute_pos_diff(fork_pose[:3], plate_pose[:3], threshold=0.008)
+ori_diff = compute_orientation_diff(ee_quat, fork_orientation, threshold=0.09)
+ret_val = pos_diff and ori_diff
+
+#Query: Check if the pen is vertical.
+ee_pos = get_ee_pos()
+pen_state = parse_object_state("pen")
+pen_pose_ref, pen_pose_ext = pen_state.get("refined")["move"][0]()[:], pen_state.get("extracted")["move"][0]()[:]
+pen_vector = np.subtract(pen_pose_ref[:3], pen_pose_ext[:3])
+ret_val = compute_vector_diff(pen_vector, axis="z", threshold=30, degree=0, direction='positive')
+
+#Query: Check if the pen is held vertically 10cm above the holder.
+ee_pos = get_ee_pos()
+pen_state = parse_object_state("pen")
+pen_pose_ref, pen_pose_ext = pen_state.get("refined")["move"][0]()[:], pen_state.get("extracted")["move"][0]()[:]
+pen_vector = np.subtract(pen_pose_ref[:3], pen_pose_ext[:3])
+p_holder_state = parse_object_state("pen_holder")
+p_holder_pose = p_holder_state.get("refined", p_holder_state["extracted"])["move"][0]()[:]
+p_holder_pose[2] += 0.1
+ori_diff = compute_vector_diff(pen_vector, axis="z", threshold=30, degree=0, direction='positive')
+pos_diff = compute_pos_diff(pen_pose_ref[:3], p_holder_pose[:3], threshold=0.01)
+ret_val = pos_diff and ori_diff
+
+#Query: Check if the end effector is at a 135° angle to the z-axis.
+ee_quat = get_ee_quat()
+ee_x_vector = get_ee_axis_vector(ee_wxyz, axis='x')
+ret_val = compute_vector_diff(ee_x_vector, axis="z", threshold=20, degree=135, direction='positive')

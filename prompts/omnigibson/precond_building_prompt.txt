@@ -1,0 +1,20 @@
+from env_utils import back_to_inital_pose, get_ee_pos, get_ee_quat, compute_pos_diff, compute_orientation_diff
+from perception_utils import parse_object_state, is_object_grasped, transform_orientation
+
+#Query: Back to inital pose
+ret_val = back_to_inital_pose()
+
+#Query: Check if the red pencil is is grasped by the end effector.
+r_pencil_state = parse_object_state("red_pencil")
+r_pencil_state_pose = r_pencil_state.get("refined", r_pencil_state["extracted"])["move"][0]()[:]
+ret_val = is_object_grasped(r_pencil_state_pose[:3])
+
+# Query: Check if the end effector reaches the knife handle.
+ee_pos = get_ee_pos()
+ee_quat = get_ee_quat()
+knife_state = parse_object_state("knife_handle")
+knife_pose = knife_state.get("refined", knife_state["extracted"])["move"][0]()[:]
+knife_orientation = transform_orientation(name="knife_handle", xyzw=knife_pose[3:], convention='xyz', angle=None, type="object")
+pos_diff = compute_pos_diff(ee_pos, knife_pose[:3], threshold=0.005)
+ori_diff = compute_orientation_diff(ee_quat, knife_orientation, threshold=0.6)
+ret_val = pos_diff and ori_diff

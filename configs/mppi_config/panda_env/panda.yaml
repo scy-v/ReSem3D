@@ -1,0 +1,7 @@
+type: robot
+name: panda
+fixed: True
+urdf_file: "franka_description/robots/franka_panda.urdf"
+flip_visual: True
+gravity: false
+init_pos: [0, 0, 2]

@@ -1,0 +1,8 @@
+pytorch3d==0.7.7
+zerorpc==0.6.3
+openai==1.51.2
+numba==0.60.0
+scikit-learn==1.5.2
+open3d==0.19.0
+httpx==0.27.2
+matplotlib==3.9.2

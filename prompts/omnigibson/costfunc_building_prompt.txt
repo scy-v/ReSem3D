@@ -1,0 +1,76 @@
+from perception_utils import parse_object_state, transform_orientation
+from env_utils import mppi_get_ee_pose, compute_orientation_cost, compute_reach_cost, compute_world_vector_cost
+
+#Query: Move the end effector to the hammer with default pos/ori weights.
+#Target
+hammer_state = parse_object_state("hammer")
+hammer_pose = hammer_state.get("refined", hammer_state["extracted"])["move"][0]()[:] # "move" needs callback
+hammer_orientation = transform_orientation(name="hammer", xyzw=hammer_pose[3:], convention='xyz', angle=None, type='world') # in Target
+#Cost
+weights = [10, 2]
+ee_pos, ee_wxyz = mppi_get_ee_pose()
+orientation_cost = compute_orientation_cost(ee_wxyz, hammer_orientation)
+reach_cost = compute_reach_cost(ee_pos, hammer_pose[:3])
+ret_val = weights[0] * reach_cost + weights[1] * orientation_cost
+
+#Query: Move the end effector 2cm above the evaporating dish with default pos/ori weights.
+#Target
+e_dish_state = parse_object_state("evaporating_dish")
+e_dish_pose = e_dish_state.get("refined", e_dish_state["extracted"])["move"][0]()[:] # "move" needs callback.
+e_dish_orientation = transform_orientation(name="evaporating_dish", xyzw=e_dish_pose[3:], convention='xyz', angle=None, type='world') # in Target
+e_dish_pose[2] += 0.02
+#Cost
+weights = [10, 2]
+ee_pos, ee_wxyz = mppi_get_ee_pose()
+orientation_cost = compute_orientation_cost(ee_wxyz, e_dish_orientation)
+reach_cost = compute_reach_cost(ee_pos, e_dish_pose[:3])
+ret_val = weights[0] * reach_cost + weights[1] * orientation_cost
+
+#Query: Hold the marker vertically at a height of 10 cm with high pos/ori weights.
+#Target
+marker_state = parse_object_state("marker")
+marker_pose = marker_state.get("refined", marker_state["extracted"])["init"][0][:] # "init" doesn't need callback.
+marker_pose[2] += 0.1
+#Cost
+weights = [10, 0.09] # high weights
+ee_pos, ee_wxyz = mppi_get_ee_pose()
+orientation_cost = compute_world_vector_cost(ee_wxyz, world_axis="z", ee_axis='x', degree=0, use_positive_direction=True)
+reach_cost = compute_reach_cost(ee_pos, marker_pose[:3])
+ret_val = weights[0] * reach_cost + weights[1] * orientation_cost
+
+#Query: Move the end effector 16cm vertically above the toothpaste holder with high pos/ori weights.
+#Target
+t_holder_state = parse_object_state("toothpaste_holder")
+t_holder_pose = t_holder_state.get("refined", t_holder_state["extracted"])["move"][0]()[:] # "move" needs callback.
+t_holder_pose[2] += 0.16
+#Cost
+weights = [10, 0.09] # high weights
+ee_pos, ee_wxyz = mppi_get_ee_pose()
+orientation_cost = compute_world_vector_cost(ee_wxyz, world_axis="z", ee_axis='x', degree=0, use_positive_direction=True)
+reach_cost = compute_reach_cost(ee_pos, t_holder_pose[:3])
+ret_val = weights[0] * reach_cost + weights[1] * orientation_cost
+
+#Query: Raise the burette to a height of 12 cm with default pos/ori weights.
+#Target
+stick_state = parse_object_state("burette")
+burette_pose = burette_state.get("refined", burette_state["extracted"])["init"][0][:] # "init" doesn't need callback.
+burette_orientation = transform_orientation(name="burette", xyzw=burette_pose[3:], convention='xyz', angle=None, type='world') # in Target
+burette_pose[2] += 0.12
+#Cost
+weights = [10, 2]
+ee_pos, ee_wxyz = mppi_get_ee_pose()
+orientation_cost = compute_orientation_cost(ee_wxyz, burette_orientation)
+reach_cost = compute_reach_cost(ee_pos, burette_pose[:3])
+ret_val = weights[0] * reach_cost + weights[1] * orientation_cost
+
+#Query: Move the end effector at a 135° angle to the z-axis, 10 cm above the plate with more higher pos/ori weights.
+#Target
+plate_state = parse_object_state("plate")
+plate_pose = plate_state.get("refined", plate_state["extracted"])["move"][0]()[:] # "move" needs callback.
+plate_pose[2] += 0.1
+#Cost
+weights = [10, 0.06] # more higher weights
+ee_pos, ee_wxyz = mppi_get_ee_pose()
+orientation_cost = compute_world_vector_cost(ee_wxyz, world_axis="z", ee_axis='x', degree=135, use_positive_direction=True)
+reach_cost = compute_reach_cost(ee_pos, plate_pose[:3])
+ret_val = weights[0] * reach_cost + weights[1] * orientation_cost

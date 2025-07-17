@@ -1,0 +1,89 @@
+from task_utils import subtask_exec
+from inference_utils import constraint_extraction
+
+#Query: Please Pick up the beaker and place it onto the chemical station.
+constraint_extraction("Extract constraints for beaker’s opening and chemical station's center, and refine the constraint for the beaker's opening")
+tasks = [
+    "Grasp the beaker",
+    "Raise the beaker to a height of 20 cm",
+    "Move the breaker 16cm above the chemical station",
+    "Open the gripper"]
+
+current_task = 0
+while current_task < len(tasks):
+    if subtask_exec(tasks[current_task]):
+        current_task += 1
+    else:
+        current_task = max(0, current_task - 1)
+# done
+
+#Query: Hold the chopstick by the thick end and place it vertically into the holder.
+constraint_extraction("Extract constraints for chopstick’s center and holder's center, and refine the constraints for both the chopstick's thick end and the holder's opening")
+tasks = [
+    "Grasp the chopstick",
+    "Raise the chopstick to a height of 20 cm",
+    "Hold the chopstick vertically at a height of 20 cm"
+    "Hold the chopstick 10cm vertically above the holder"]
+
+current_task = 0
+while current_task < len(tasks):
+    if subtask_exec(tasks[current_task]):
+        current_task += 1
+    else:
+        current_task = max(0, current_task - 1)
+# done
+
+#Query: Please open the gripper.
+constraint_extraction("Extract constraints for chopstick’s center and holder's center, and refine the constraints for both the chopstick's thick end and the holder's opening")
+tasks = [
+    "Open the gripper"]
+
+current_task = 0
+while current_task < len(tasks):
+    if subtask_exec(tasks[current_task]):
+        current_task += 1
+    else:
+        current_task = max(0, current_task - 1)
+# done
+
+#Query: Please pass me a tissue.
+constraint_extraction("Extract constraints for tissue, not tissue box")
+tasks = [   
+    "grasp the tissue",
+    "Raise the tissue to a height of 10 cm",
+    ]
+current_task = 0
+while current_task < len(tasks):
+    if subtask_exec(tasks[current_task]):
+        current_task += 1
+    else:
+        current_task = max(0, current_task - 1)
+# done
+
+#Query: Please back to the inital pose.
+tasks = [   
+    "Back to the inital pose"]
+current_task = 0
+while current_task < len(tasks):
+    if subtask_exec(tasks[current_task]):
+        current_task += 1
+    else:
+        current_task = max(0, current_task - 1)
+# done
+
+#Query: Pick up the volumetric flask and pour the liquid into the dish.
+constraint_extraction("Extract constraints for volumetric flask’s opening and dish's center, and refine the constraint for the volumetric flask's opening")
+tasks = [
+    "Grasp the volumetric flask",
+    "Raise the volumetric flask at a height of 25 cm",
+    "Move the volumetric flask 15cm above the dish"
+    "Tip the volumetric flask at a 180° angle, 10 cm above the dish"
+    ]
+
+current_task = 0
+while current_task < len(tasks):
+    if subtask_exec(tasks[current_task]):
+        current_task += 1
+    else:
+        current_task = max(0, current_task - 1)
+# done

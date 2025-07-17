@@ -1,0 +1,7 @@
+defaults:
+  - mppi: panda
+  - isaacgym: panda
+  
+env_type: panda_env
+
+  

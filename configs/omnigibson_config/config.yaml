@@ -1,0 +1,210 @@
+name: ReSem3D
+device: &device 'cuda'
+bounds_min: &bounds_min [-0.45, -0.75, 0.698]
+bounds_max: &bounds_max [0.10, 0.60, 1.2]
+
+env:
+  env_name: omnigibson
+  ttf: ttf/Times_New_Roman.ttf
+  zerorpc: "tcp://127.0.0.1:4242"
+  base_url: None
+  api_key: None
+  debug: False
+  vel_scale: 0.6
+  grid_size: [4, 4]
+  video_cache_size: 2000
+  save_video_flag: False
+
+  vfm:
+    model: gpt-4o
+    vfm_camera: 0
+    iou: 0.7
+    conf: 0.25
+    cluster: 20
+    temperature: 0.1
+    font_size: 25
+    inner_offset: 12
+    outer_offset: 14
+    contained_num: 2
+    overlap_other: 0.9
+    overlap_self: 0.01
+    filter_scale: [0.9, 0.0001]
+    image: "image/image.png"
+    weight: weights/FastSAM-x.pt
+    extraction_prompt: mllm_inference_prompt/mllm_extraction_prompt.txt
+    refinement_prompt: mllm_inference_prompt/mllm_refinement_prompt.txt
+    mllm_inference:  prompts/omnigibson
+    mask: result/ann.png
+    constr: result/constr.png
+    filtered_mask: result/filtered_ann.png
+    filtered_constr: result/filtered_constr.png
+    clustered_mask: &clustered_mask result/clustered_ann.png
+    clustered_constr: &clustered_constr_mask result/clustered_constr.png
+    part_level_constr: *clustered_constr_mask
+    extracted_mask: *clustered_mask
+    refined_label_grid: "result/refined_label_grid.png"
+    refined_mask: "result/refined_ann.png"
+    mapped_forward_mask: result/mapped_forward_ann.png
+    mapped_backward_mask: result/mapped_backward_mask.png
+    device: *device
+
+  og_sim:
+    physics_frequency: 120
+    action_frequency: 30
+
+  scene:
+    name: Rs_int
+    type: InteractiveTraversableScene
+    scene_model: Rs_int
+
+  robot:
+    robot_config:
+      name: FrankaPanda
+      type: FrankaPanda
+      position: [-0.25, 1.25, 0.907]
+      obs_modalities: [rgb, depth]
+      action_modalities: continuous
+      action_normalize: False
+      grasping_mode: sticky
+
+      controller_config:
+        arm_0:
+          name: JointController
+          motor_type: velocity
+          use_delta_commands: False
+          use_impedances: False
+
+        gripper_0:
+          name: MultiFingerGripperController
+          command_input_limits: [0.0, 1.0]
+          mode: smooth
+
+        camera:
+          name: JointController
+
+  camera:
+    # recorder 
+    1:
+      name: cam_1
+      position: [ 0.74522,  1.77266,  1.84723]
+      orientation: [0.20015, 0.40917, 0.78814, 0.41395]
+      resolution: 640
+
+    # vfm
+    0:
+      name: cam_0
+      position: [0.37045,  1.28294,  1.42339]
+      orientation: [ 0.0550,  0.0544,  0.7010,  0.7090]
+      resolution: 640
+
+  visualizer:
+    bounds_min: *bounds_min
+    bounds_max: *bounds_max
+
+  lmp_config:
+    lmps:
+      constraint_extraction:
+        layer: 2-1
+        prompt_fname: constraint_extraction_prompt
+        model: gpt-4o
+        max_tokens: 512
+        temperature: 0
+        query_prefix: '# Query: '
+        query_suffix: '.'
+        stop:
+          - '# Query: '
+        maintain_session: False
+        include_context: False
+        has_return: False
+        return_val_name: ret_val
+
+      constraint_refinement:
+        layer: 3-1
+        prompt_fname: constraint_refinement_prompt
+        model: gpt-4o
+        max_tokens: 512
+        temperature: 0
+        query_prefix: '# Query: '
+        query_suffix: '.'
+        stop:
+          - '# Query: '
+        maintain_session: False
+        include_context: False
+        has_return: True
+        return_val_name: ret_val
+
+      task_planner:
+        layer: 1-1
+        prompt_fname: task_planner_prompt
+        model: gpt-4o
+        max_tokens: 512
+        temperature: 0
+        query_prefix: '# Query: '
+        query_suffix: '.'
+        stop:
+          - '# Query: '
+        maintain_session: False
+        include_context: False
+        has_return: False
+        return_val_name: ret_val
+
+      subtask_exec:
+        layer: 2-2
+        prompt_fname: subtask_exec_prompt
+        model: gpt-4o
+        max_tokens: 512
+        temperature: 0
+        query_prefix: '# Query: '
+        query_suffix: '.'
+        stop:
+          - '# Query: '
+        maintain_session: False
+        include_context: False
+        has_return: True
+        return_val_name: ret_val
+
+      precond_building:
+        layer: 3-2
+        prompt_fname: precond_building_prompt
+        model: gpt-4o
+        max_tokens: 512
+        temperature: 0
+        query_prefix: '# Query: '
+        query_suffix: '.'
+        stop:
+          - '# Query: '
+        maintain_session: False
+        include_context: False
+        has_return: True
+        return_val_name: ret_val
+
+      postcond_building:
+        layer: 3-2
+        prompt_fname: postcond_building_prompt
+        model: gpt-4o
+        max_tokens: 512
+        temperature: 0
+        query_prefix: '# Query: '
+        query_suffix: '.'
+        stop:
+          - '# Query: '
+        maintain_session: False
+        include_context: False
+        has_return: True
+        return_val_name: ret_val
+
+      costfunc_building:
+        layer: 3-2
+        prompt_fname: costfunc_building_prompt
+        model: gpt-4o
+        max_tokens: 512
+        temperature: 0
+        query_prefix: '# Query: '
+        query_suffix: '.'
+        stop:
+          - '# Query: '
+        maintain_session: False
+        include_context: False
+        has_return: True
+        return_val_name: ret_val
+      

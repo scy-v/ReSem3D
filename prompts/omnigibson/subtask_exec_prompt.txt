@@ -1,0 +1,47 @@
+from env_utils import back_to_inital_pose
+from task_utils import precond_building, postcond_building, costfunc_building, mppi_exec
+
+#Query: Grasp the apple.
+pre_conditions = precond_building("Back to inital pose")
+costs = costfunc_building("Move the end effector to the apple with default pos/ori weights")
+post_conditions = postcond_building("Check if the end effector reaches the apple")
+ret_val = mppi_exec(pre_conditions, costs, post_conditions)
+
+#Query: Raise the stick to a height of 10 cm.
+pre_conditions = precond_building("Check if the stick is grasped by the end effector")
+costs = costfunc_building("Raise the stick to a height of 10 cm with default pos/ori weights")
+post_conditions = postcond_building("Check if the stick has reached a height of 10 cm")
+ret_val = mppi_exec(pre_conditions, costs, post_conditions)
+
+#Query: Move the green cube 20cm above the red bowl.
+pre_conditions = precond_building("Check if the green cube is grasped by the end effector")
+costs = costfunc_building("Move the end effector 20cm above the red bowl with default pos/ori weights")
+post_conditions = postcond_building("Check if the green cube is 20cm above the red bowl")
+ret_val = mppi_exec(pre_conditions, costs, post_conditions)
+
+#Query: Open the gripper.
+ret_val = mppi_exec(gripper_command="open")
+
+#Query: Close the gripper.
+ret_val = mppi_exec(gripper_command="close")
+
+#Query: Back to the inital pose.
+ret_val = back_to_inital_pose()
+
+#Query: Hold the pencil vertically at a height of 15 cm.
+pre_conditions = precond_building("Check if the pencil is grasped by the end effector")
+costs = costfunc_building("Hold the pencil vertically at a height of 15 cm with high pos/ori weights")
+post_conditions = postcond_building("Check if the pencil is vertical")
+ret_val = mppi_exec(pre_conditions, costs, post_conditions)
+
+#Query: Hold the toothbrush 16cm vertically above the tooth cup.
+pre_conditions = precond_building("Check if the toothbrush is grasped by the end effector")
+costs = costfunc_building("Move the end effector 16cm vertically above the tooth cup with high pos/ori weights")
+post_conditions = postcond_building("Check if the toothbrush is held vertically 10cm above the tooth cup")
+ret_val = mppi_exec(pre_conditions, costs, post_conditions)
+
+#Query: Tip the beaker at a 180° angle, 10 cm above the bottle.
+pre_conditions = precond_building("Check if the beaker is grasped by the end effector")
+costs = costfunc_building("Move the end effector at a 135° angle to the z-axis, 10 cm above the bottle with more higher pos/ori weights")
+post_conditions = postcond_building("Check if the end effector is at a 135° angle to the z-axis")
+ret_val = mppi_exec(pre_conditions, costs, post_conditions)
