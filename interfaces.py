@@ -8,7 +8,7 @@ from scipy.stats import gaussian_kde
 from utils import bytes_to_torch, torch_to_bytes
 from scipy.spatial.transform import Rotation as R
 ANGLE_OBJECT_INFO = {}
-ANGLE_WORLD_INFO = {"pestle": [0, 0, 90], "mortar": [90, -90, 0], "erlenmeyer_flask": [0, 0, 0], "magnetic_stirrer": [0, 0, 0], "tissue": [0, 0, -45], "reagent_bottle": [0, -45, -90], "dish": [0, -45, -90]}
+ANGLE_WORLD_INFO = {"erlenmeyer_flask": [0, 0, 0], "magnetic_stirrer": [0, 0, 0]}
 class LMP_interface():
 
     def __init__(self, env, visualizer):

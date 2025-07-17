@@ -23,8 +23,8 @@ def run(config, scene_path, objects_path, instruction):
 def main():
     """Program entry point: parse args, load config, and start running."""
     parser = argparse.ArgumentParser(description="Run ReSem3D with configurable parameters.")
-    parser.add_argument("--load_cache", action="store_false", help="Enable cache in all LMP configs.")
-    parser.add_argument("--visualize", action="store_false", help="Enable visualizer display.")
+    parser.add_argument("--load_cache", action="store_true", help="Enable cache in all LMP configs.")
+    parser.add_argument("--visualize", action="store_true", help="Enable visualizer display.")
     parser.add_argument("--instruction", type=str, default="Please pick up the erlenmeyer flask and place it on the magnetic stirrer.",
                         help="Natural language instruction for ReSem3D.")
     args = parser.parse_args()
@@ -41,7 +41,7 @@ def main():
 
     # Add visualize
     config['env']['visualize'] = args.visualize
-
+    
     # Add load_cache into each LMP config
     for _, lmp_cfg in config['env']['lmp_config']['lmps'].items():
         if isinstance(lmp_cfg, dict):

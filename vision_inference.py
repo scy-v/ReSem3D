@@ -7,7 +7,7 @@ import base64
 import numpy as np
 from PIL import Image
 from sklearn.cluster import DBSCAN
-from visualizer import img_show_and_save
+from visualizer import img_show, img_save
 from PIL import Image, ImageDraw, ImageFont
 base_dir = os.path.dirname(os.path.abspath(__file__))
 fastsam_path = os.path.join(base_dir, 'FastSAM')
@@ -67,8 +67,9 @@ class VisionInference():
         """
         #mark
         constraint_img, _ = self.mark_constr_number(ann)
+        img_save(constraint_img, output=self.vfm_config["constr"])
         if self.env_config["visualize"]:
-            img_show_and_save(constraint_img, output=self.vfm_config["constr"], title='marked_ann')
+            img_show(constraint_img, title='marked_ann')
 
         # filter mask
         filtered_ann = self.filter_masks(ann)
@@ -76,8 +77,9 @@ class VisionInference():
         
         #mark
         constraint_img, _ = self.mark_constr_number(filtered_ann)
+        img_save(constraint_img, output=self.vfm_config["filtered_constr"])
         if self.env_config["visualize"]:
-            img_show_and_save(constraint_img, output=self.vfm_config["filtered_constr"], title='marked_filtered_ann')
+            img_show(constraint_img, title='marked_filtered_ann')
 
         #cluster mask
         clustered_ann = self.cluster_masks(filtered_ann)
@@ -85,8 +87,9 @@ class VisionInference():
         
         #mark
         constraint_img, constraint_coords = self.mark_constr_number(clustered_ann)
+        img_save(constraint_img, output=self.vfm_config["clustered_constr"])
         if self.env_config["visualize"]:
-            img_show_and_save(constraint_img, output=self.vfm_config["clustered_constr"], title='marked_cluster_ann')
+            img_show(constraint_img, title='marked_cluster_ann')
         
         return clustered_ann, constraint_coords
     

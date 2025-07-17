@@ -8,7 +8,7 @@ base_dir = os.path.dirname(os.path.abspath(__file__))
 def save_image(img, path):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     if isinstance(img, torch.Tensor):
-        img = img.cpu().numpy()  # 转成numpy数组
+        img = img.cpu().numpy() 
     img = Image.fromarray(img)
     img.save(path)
 

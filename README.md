@@ -92,7 +92,7 @@ Place the weights inside the `ReSem3D/weights/` directory.
 
 ## 🖥️ Server Setup (`m3p2i-aip`)
 
-### 1. Clone the `m3p2i-aip` Repository and Create Environment
+### 1. Clone the [m3p2i-aip](https://github.com/tud-amr/m3p2i-aip.git) Repository and Create Environment
 
 ```bash
 cd <ReSem3D_folder>
@@ -141,7 +141,11 @@ python mppi_server.py
 ```
 
 ### 2. Run the Client
-
+Before running, set your OpenAI API key by either:
+```bash
+export OPENAI_API_KEY="your_api_key_here"
+```
+or add it to `configs/omnigibson_config/config.yaml.` Then start running with:
 ```bash
 cd <ReSem3D_folder>
 python run.py [--load_cache] [--visualize]

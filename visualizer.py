@@ -32,15 +32,16 @@ def generate_nearby_points(point, num_points_per_side=5, half_range=0.005):
         nearby_points = point[:, None, :] + offsets_array
         return nearby_points
 
-def img_show_and_save(image, output, title):
+def img_save(image, output):
+    image.save(output)
+     
+def img_show(image, title):
     plt.figure()
     plt.imshow(image)
     plt.axis("off")
     plt.title(title)
     plt.show(block=False)  
     plt.pause(0.2)
-    # image.show()
-    image.save(output)
      
 class Visualizer:
     def __init__(self, config, env):
@@ -74,6 +75,7 @@ class Visualizer:
         o3d.visualization.draw_geometries([pcd])
 
     def _get_scene_points_and_colors(self):
+        """Retrieves 3D scene points and colors."""
         # scene
         cam_obs = [0]
         cam_obs = self.env.get_cam_obs()
@@ -105,6 +107,7 @@ class Visualizer:
         return points + center
 
     def visualize_points(self, points):
+        """Visualizes the given points within a 3D scene."""
         visualize_buffer = {
             "points": [],
             "colors": []
