@@ -9,7 +9,7 @@ def run(config, scene_path, objects_path, instruction):
     """Set up the environment and run ReSem3D."""
     # Set up environment
     env = OGEnv(config['env'], scene_path, objects_path, verbose=False)
-    env._vision_inference()
+    env.vision_inference()
 
     # Set up visualizer and LMP modules
     visualizer = Visualizer(config, env)

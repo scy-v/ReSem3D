@@ -100,15 +100,6 @@ class OGEnv:
     # = internal functions
     # ======================================
     
-    def _vision_inference(self):
-        """Run VFM vision inference."""
-        img_tensor = self.cams[0].get_obs()['rgb']
-        save_image(img_tensor, get_abs_path(self.vfm_config["image"]))
-        ann = self.vision_infer.vfm_inference()
-        self.clustered_ann, self.constraint_coords = self.vision_infer.constraints_process(ann)
-        self.vision_infer.delete_model()
-        return ann
-    
     def _normalize_mask(self, constr_coords):
         """
         Step 1: Normalize mask and get transform params.
@@ -324,6 +315,15 @@ class OGEnv:
     # ======================================
     # = public functions
     # ======================================
+    
+    def vision_inference(self):
+        """Run VFM vision inference."""
+        img_tensor = self.cams[0].get_obs()['rgb']
+        save_image(img_tensor, get_abs_path(self.vfm_config["image"]))
+        ann = self.vision_infer.vfm_inference()
+        self.clustered_ann, self.constraint_coords = self.vision_infer.constraints_process(ann)
+        self.vision_infer.delete_model()
+        return ann
     
     def transform_to_label(self, constr_coords):
         """

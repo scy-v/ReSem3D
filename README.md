@@ -82,12 +82,15 @@ git clone https://github.com/scy-v/ReSem3D.git
 ```bash
 cd ReSem3D
 git clone https://github.com/CASIA-IVA-Lab/FastSAM.git
-pip install -r requirements_client.txt
 ```
 
 Download the [FastSAM model weights](https://drive.usercontent.google.com/download?id=1m1sjY4ihXBU1fZXdQ-Xdj-mDltW-2Rqv&export=download)  
 Place the weights inside the `ReSem3D/weights/` directory.
 
+### 7. Install Additional Dependencies
+```bash
+pip install -r requirements_client.txt
+```
 ---
 
 ## 🖥️ Server Setup (`m3p2i-aip`)

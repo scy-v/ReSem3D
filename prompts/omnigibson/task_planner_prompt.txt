@@ -7,7 +7,8 @@ tasks = [
     "Grasp the beaker",
     "Raise the beaker to a height of 20 cm",
     "Move the breaker 16cm above the chemical station",
-    "Open the gripper"]
+    "Open the gripper"
+    ]
 
 current_task = 0
 while current_task < len(tasks):
@@ -22,8 +23,9 @@ constraint_extraction("Extract constraints for chopstick’s center and holder's
 tasks = [
     "Grasp the chopstick",
     "Raise the chopstick to a height of 20 cm",
-    "Hold the chopstick vertically at a height of 20 cm"
-    "Hold the chopstick 10cm vertically above the holder"]
+    "Hold the chopstick vertically at a height of 20 cm",
+    "Hold the chopstick 10cm vertically above the holder"
+    ]
 
 current_task = 0
 while current_task < len(tasks):
@@ -34,9 +36,9 @@ while current_task < len(tasks):
 # done
 
 #Query: Please open the gripper.
-constraint_extraction("Extract constraints for chopstick’s center and holder's center, and refine the constraints for both the chopstick's thick end and the holder's opening")
 tasks = [
-    "Open the gripper"]
+    "Open the gripper"
+    ]
 
 current_task = 0
 while current_task < len(tasks):
@@ -50,7 +52,7 @@ while current_task < len(tasks):
 constraint_extraction("Extract constraints for tissue, not tissue box")
 tasks = [   
     "grasp the tissue",
-    "Raise the tissue to a height of 10 cm",
+    "Raise the tissue to a height of 10 cm"
     ]
 current_task = 0
 while current_task < len(tasks):
@@ -62,7 +64,8 @@ while current_task < len(tasks):
 
 #Query: Please back to the inital pose.
 tasks = [   
-    "Back to the inital pose"]
+    "Back to the inital pose"
+    ]
 current_task = 0
 while current_task < len(tasks):
     if subtask_exec(tasks[current_task]):
