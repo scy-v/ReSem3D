@@ -159,7 +159,7 @@ python run.py [--load_cache] [--visualize]
 
 ---
 
-## 🙏 Acknowledgments
+## 🔑 Acknowledgments
 
 - **Simulation Environments**  
   The simulation environments are based on [OmniGibson](https://behavior.stanford.edu/omnigibson/getting_started/installation.html) and [Isaac Gym](https://developer.nvidia.com/isaac-gym).
