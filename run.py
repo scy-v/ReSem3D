@@ -1,9 +1,15 @@
 import os
+import yaml
 import argparse
 from environment import OGEnv
-from arguments import get_config
 from interfaces import setup_LMP
 from visualizer import Visualizer
+
+def get_config(config_path=None):
+    assert config_path and os.path.exists(config_path), f'config file does not exist ({config_path})'
+    with open(config_path, 'r') as f:
+        config = yaml.load(f, Loader=yaml.FullLoader)
+    return config
 
 def run(config, scene_path, objects_path, instruction):
     """Set up the environment and run ReSem3D."""
