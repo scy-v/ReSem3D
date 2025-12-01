@@ -168,4 +168,4 @@ python run.py [--load_cache] [--visualize]
   <img src="./assets/contact_warning2.png" width="100%">
 </p>
 
-2. Due to simulation limits (`execute_action`), the robot’s optimization and execution run at a low frequency (`~6 Hz`). If the robot struggles to reach the target pose, please adjust the target threshold or deploy in a real environment.
+2. Due to simulation limits (`execute_action`), the robot’s optimization and execution run at a low frequency (`~6 Hz`). If the robot struggles to reach the target pose, please adjust threshold or deploy in a real environment.
