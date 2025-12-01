@@ -1,5 +1,5 @@
 from omnigibson.sensors.vision_sensor import VisionSensor
-import transform_utils as T
+from utils import pose_inv, pose2mat
 import numpy as np
 
 class OGCamera:
@@ -84,7 +84,7 @@ def get_cam_intrinsics(cam):
     return intrinsics
 
 def get_cam_extrinsics(cam):
-    return T.pose_inv(T.pose2mat(cam.get_position_orientation()))
+    return pose_inv(pose2mat(cam.get_position_orientation()))
 
 def pixel_to_3d_points(depth_image, intrinsics, extrinsics):
     # Get the shape of the depth image
@@ -123,7 +123,7 @@ def pixel_to_3d_points(depth_image, intrinsics, extrinsics):
 
     # Apply extrinsics to get world coordinates
     # world_coordinates_homogeneous = camera_coordinates_homogeneous @ extrinsics.T
-    world_coordinates_homogeneous = T.pose_inv(extrinsics) @ (camera_coordinates_homogeneous.T)
+    world_coordinates_homogeneous = pose_inv(extrinsics) @ (camera_coordinates_homogeneous.T)
     world_coordinates_homogeneous = world_coordinates_homogeneous.T
 
     # Convert back to non-homogeneous coordinates

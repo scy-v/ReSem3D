@@ -2,7 +2,6 @@ import open3d as o3d
 import numpy as np
 import matplotlib
 import cv2
-import transform_utils as T
 import matplotlib.pyplot as plt
 
 def add_to_visualize_buffer(visualize_buffer, visualize_points, visualize_colors):

@@ -8,8 +8,7 @@ import datetime
 import numpy as np
 import omnigibson as og
 from openai import OpenAI
-import transform_utils as T
-from utils import save_image
+from utils import save_image, pose2mat, pose_inv
 from functools import partial
 from og_utils import OGCamera
 import matplotlib.pyplot as plt
@@ -579,10 +578,10 @@ class OGEnv:
         """
         closest_prim_path, init_pose, closest_point = register_constr
         prim_path_xyzw = np.array(init_pose[1])
-        init_pose = T.pose2mat(init_pose)
-        centering_transform = T.pose_inv(init_pose)
+        init_pose = pose2mat(init_pose)
+        centering_transform = pose_inv(init_pose)
         centered = np.dot(centering_transform, np.append(closest_point, 1))[:3]
-        curr_pose = T.pose2mat(PoseAPI.get_world_pose(closest_prim_path))
+        curr_pose = pose2mat(PoseAPI.get_world_pose(closest_prim_path))
         constr_positions = np.dot(curr_pose, np.append(centered, 1))[:3] - self.robot_initial_position
         return np.hstack((constr_positions, prim_path_xyzw)).tolist()
 

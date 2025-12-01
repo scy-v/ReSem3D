@@ -2,7 +2,7 @@ import os
 import io, torch
 import numpy as np
 from PIL import Image
-
+from scipy.spatial.transform import Rotation as R
 base_dir = os.path.dirname(os.path.abspath(__file__))
 
 def save_image(img, path):
@@ -22,6 +22,25 @@ def torch_to_bytes(t: torch.Tensor) -> bytes:
 def bytes_to_torch(b: bytes) -> torch.Tensor:
     buff = io.BytesIO(b)
     return torch.load(buff)
+
+def pose2mat(pose):
+    if isinstance(pose[0], torch.Tensor):
+        pose = tuple(p.detach().cpu().numpy() if isinstance(p, torch.Tensor) else p for p in pose)
+    homo_pose_mat = np.zeros((4, 4), dtype=pose[0].dtype)
+    homo_pose_mat[:3, :3] = quat2mat(pose[1])
+    homo_pose_mat[:3, 3] = np.array(pose[0], dtype=pose[0].dtype)
+    homo_pose_mat[3, 3] = 1.0
+    return homo_pose_mat
+
+def quat2mat(quaternion):
+    return R.from_quat(quaternion).as_matrix()
+
+def pose_inv(pose_mat):
+    pose_inv = np.zeros((4, 4))
+    pose_inv[:3, :3] = pose_mat[:3, :3].T
+    pose_inv[:3, 3] = -pose_inv[:3, :3].dot(pose_mat[:3, 3])
+    pose_inv[3, 3] = 1.0
+    return pose_inv
 
 # ===============================================
 # = LMP utils
